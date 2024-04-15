@@ -3,11 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PetsModule } from './pets/pets.module';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
+import * as path from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver } from '@nestjs/apollo';
-import { CustomerModel } from './invoice/customer.model';
+import { CustomerModel } from './customer/customer.model';
 import { InvoiceModel } from './invoice/invoice.model';
+import { CustomerModule } from './customer/customer.module';
+import { InvoiceModule } from './invoice/invoice.module';
+import { CustomerResolver } from './customer/customer.resolver';
+import { InvoiceResolver } from './invoice/invoice.resolver';
 
 @Module({
   imports: [
@@ -25,12 +29,16 @@ import { InvoiceModel } from './invoice/invoice.model';
       password: 'luongba',
       database: 'invoiceapp',
       entities: [CustomerModel, InvoiceModel],
-      synchronize: true,
+      // entities: ['dist/**/*.model.js'],
+      migrations: [path.resolve(__dirname, 'database', 'migration', '*')],
+      synchronize: false,
       logging: true,
     }),
     PetsModule,
+    CustomerModule,
+    InvoiceModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CustomerResolver, InvoiceResolver],
 })
 export class AppModule {}

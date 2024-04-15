@@ -2,11 +2,12 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CustomerModel } from './customer.model';
+import { CustomerModel } from '../customer/customer.model';
 
 export enum Currency {
   NGN = 'NGN',
@@ -31,6 +32,7 @@ export class Item {
 }
 
 @ObjectType()
+@Entity()
 export class InvoiceModel {
   @Field()
   @PrimaryGeneratedColumn('uuid')

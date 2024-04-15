@@ -7,17 +7,17 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { InvoiceModel } from './invoice.model';
+import { InvoiceModel } from '../invoice/invoice.model';
 
 @ObjectType()
 @Entity()
 export class CustomerModel {
   @Field()
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Field()
-  @Column({ length: 100, nullable: false })
+  @Column({ length: 500, nullable: false })
   name: string;
 
   @Field()
@@ -25,7 +25,7 @@ export class CustomerModel {
   email: string;
 
   @Field()
-  @Column('varchar', { length: 10 })
+  @Column('varchar', { length: 15 })
   phone: string;
 
   @Field()
