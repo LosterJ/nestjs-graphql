@@ -14,7 +14,7 @@ export class InvoiceService {
   ) {}
 
   async create(invoice: CreateInvoiceDTO): Promise<InvoiceModel> {
-    const customer = await this.customerService.findOne(invoice.customer);
+    // const customer = await this.customerService.findOne(invoice.customer);
     const subTotal = invoice.items.reduce((acc, curr) => {
       return acc + Number((curr.rate * curr.quantity).toFixed(2));
     }, 0);
@@ -23,7 +23,7 @@ export class InvoiceService {
     const outstandingBalance = total;
     return this.invoiceRepository.save({
       ...invoice,
-      customer,
+      invoice,
       subTotal,
       taxAmount,
       total,
@@ -34,7 +34,7 @@ export class InvoiceService {
   findByCustomer(customerId: string): Promise<InvoiceModel[]> {
     return this.invoiceRepository
       .createQueryBuilder('invoice')
-      .where('invoice.customer = :id', { customerId })
+      .where('invoice.customer = :customerId', { customerId })
       .getMany();
   }
   findAll(): Promise<InvoiceModel[]> {

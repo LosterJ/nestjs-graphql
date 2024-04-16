@@ -28,7 +28,7 @@ export class CreateInvoiceDTO {
   @Field()
   issueDate: Date;
   @Field()
-  dueData: Date;
+  dueDate: Date;
   @Field()
   note: string;
   @Field((type) => [ItemDTO])

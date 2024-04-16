@@ -8,6 +8,22 @@ type Pet {
   type: String
 }
 
+type CustomerModel {
+  id: String!
+  name: String!
+  email: String!
+  phone: String!
+  address: String!
+  invoices: [InvoiceModel!]
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Item {
   description: String!
   rate: Float!
@@ -19,6 +35,7 @@ type InvoiceModel {
   invoiceNo: String!
   description: String!
   customer: CustomerModel!
+  paymentStatus: String!
   currency: String!
   taxRate: Float!
   issueDate: String!
@@ -32,22 +49,6 @@ type InvoiceModel {
   outstandingBalance: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type CustomerModel {
-  id: String!
-  name: String!
-  email: String!
-  phone: String!
-  address: String!
-  invoices: [InvoiceModel!]
-  created_at: DateTime!
-  updated_at: DateTime!
 }
 
 type Query {
@@ -71,7 +72,7 @@ input CreateInvoiceDTO {
   currency: String!
   taxRate: Float!
   issueDate: DateTime!
-  dueData: DateTime!
+  dueDate: DateTime!
   note: String!
   items: [ItemDTO!]!
 }

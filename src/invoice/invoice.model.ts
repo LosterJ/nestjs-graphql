@@ -53,6 +53,14 @@ export class InvoiceModel {
   @Field()
   @Column({
     type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.NOT_PAID,
+  })
+  paymentStatus: PaymentStatus;
+
+  @Field()
+  @Column({
+    type: 'enum',
     enum: Currency,
     default: Currency.USD,
   })

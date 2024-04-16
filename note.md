@@ -61,3 +61,132 @@ customer.model.ts
             - In code-first, a resolver class both defines resolver functions and generates the Query type.
                 - To create a resolver, we'll create a class with resolver functions as methods and decorate the class with the @Resolver() decorator
 
+customer.resolver.ts
+
+    We created the CustomerResolver, defines one query resolver function and one field resolver function.
+    - @Query() decoreator to annotated the query handler
+    - @ResolverField() to annotated that method resolves the invoice field of another model
+    - @Args() to exreact arguments form a request for use in the query handler
+
+    In the top, @Resolver() accepts an optional arguement "of" that is used to specify the parent of a field resolver function and this model is passed to the field resolver method.
+
+    Resolver class is not hold the logic, but abstract that login in to a service class, which our resolver class calls.
+
+customer.service.ts
+
+    TypeORM provices Repositories, which are connected to our data entities and used to execute queries on them.
+
+
+        - Mutations
+            - used for modifying server-side data in GraphQL
+            - techinically, a Query could be implemented to add server-side data, but the common convention is to annotate any method that causes data to be written with the @Mutation() decorator
+            - @Mutation() tells Nest that such a method is for data modification
+
+customer.resolver.ts
+
+    createCustomer() has been decorated with @Mutations() to indicate that it modifies or adds new data.
+
+    If a mutation needs to take an object as an argument, we would need to create a special kind of object called InputType and then pass it as an argument to the method.
+
+invoice.dto.ts
+
+Test your GraphQL API using the GraphQL Playground
+
+    npm run start:dev
+    localhost:3000/graphql
+
+Benefits of using GraphQL APIs
+
+- Requests are faster: allows us to cut down our request and response size by choosing the specific fields you want to query
+- Provides flexibility:
+  - REST resources usually provide less data than needed (requiring a user to make multiple reqs to achive some functionality)
+  - REST return unnecessary data where a super resource is built to accommodate multiple use case
+  - GraphQL solves this by fetching and returning the data fields specified per request
+- Structures data hierarchically: gql structures the relationship between data objects hierarchically, in a graph-like structure
+- Is strongly typed: relies on schema, which are strongly typed definitions of the data where each field and level has defined types
+- API versioning is not a problem
+
+```
+query {
+  customer(id: "ae1827b9-be1c-479a-bcec-a1fee5abfcdc") {
+    id
+    name
+    email
+    phone
+    address
+    invoices{
+      id
+      invoiceNo
+      description
+      paymentStatus
+    }
+    created_at
+    updated_at
+  }
+}
+mutation{
+  createCustomer(
+    email: "kai@gmail.com"
+    name: "Kai"
+    phone: "097545464"
+    address: "New York"
+  ){
+    id
+    name
+    address
+    email
+    phone
+  }
+}
+mutation{
+  createInvoice(
+    invoice:{
+      invoiceNo: "INV-001",
+    paymentStatus: "PAID",
+    description: "Services rendered in April 2024",
+    customer: "ae1827b9-be1c-479a-bcec-a1fee5abfcdc",
+    currency: "USD",
+    taxRate: 15,
+    issueDate: "2024-04-15T12:00:00Z",
+    dueDate: "2024-05-15T12:00:00Z",
+    note: "Please make payment by due date",
+    items: [
+      {
+       description: "Consulting Services",
+        rate: 100.00,
+        quantity: 10
+      },
+      {
+        description: "Software Development",
+        rate: 150.00,
+        quantity: 20
+      }
+    ]
+    }
+  ){
+    id
+    invoiceNo
+  description
+  customer{
+    id
+    name
+  }
+  paymentStatus
+  currency
+  taxRate
+  issueDate
+  dueDate
+  note
+  items{
+    description
+  }
+  taxAmount
+  subTotal
+  total
+  amountPaid
+  outstandingBalance
+  createdAt
+  updatedAt
+  }
+}
+```
